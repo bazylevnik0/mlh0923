@@ -19,6 +19,6 @@ array - arr []
 class - object {x,y,size}
 time  - object with functions:
 1)recalc - need algorithm for to measure of shift for each object
-*maybe naive - just thoughts: sort with mass comparing, and iterate from biger to smallest, with recalculating interaction only in iterates pair(current and last), not sure about it is true or not - but it is only one in my head.
+*maybe naive - just thoughts: sort with size comparing, and iterate from biger to smallest, with recalculating interaction only in iterates pair(current and last), not sure about it is true or not - but it is only one in my head. reason - all objects will go to the biggest(first) like a chain not a heap
 2)start animation
 3)pause animation
