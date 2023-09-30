@@ -13,3 +13,12 @@ tech: canvas, button
 *for creating an object with the position and the size(time)
 -button switch: start/stop animation
 *need setInterval
+
+structure:
+array - arr []
+class - object {x,y,size}
+time  - object with functions:
+1)recalc - need algorithm for to measure of shift for each object
+*maybe naive - just thoughts: sort with mass comparing, and iterate from biger to smallest, with recalculating interaction only in iterates pair(current and last), not sure about it is true or not - but it is only one in my head.
+2)start animation
+3)pause animation
