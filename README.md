@@ -22,3 +22,5 @@ time  - object with functions:<br>
 *maybe naive - just thoughts: sort with size comparing, and iterate from biger to smallest, with recalculating interaction only in iterates pair(current and last), not sure about it is true or not - but it is only one in my head. reason - all objects will go to the biggest(first) like a chain not a heap<br>
 2)start animation<br>
 3)pause animation<br>
+--------------------------------------------------------<br>
+*making with Poe participating(LM)
