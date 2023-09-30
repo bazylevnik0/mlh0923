@@ -1,11 +1,16 @@
-/*
+import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 
-// Clear the existing HTML content
-document.body.innerHTML = '<div id="app"></div>';
+function Greeting({ name }) {
+  return createElement(
+    "h1",
+    { className: "greeting" },
+    "Hello ",
+    createElement("i", null, name),
+    ". Welcome!",
+  );
+}
 
-// Render your React component instead
-const root = createRoot(document.getElementById("app"));
-root.render(<h1>Hello, world</h1>);
-*/
-console.log("rendered");
+const domNode = document.getElementById("navigation");
+const root = createRoot(domNode);
+root.render(createElement(Greeting, { name: "Nik0" }));
