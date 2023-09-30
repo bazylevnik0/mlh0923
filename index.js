@@ -5,7 +5,7 @@ function Greeting({ name }) {
   return createElement(
     "h1",
     { className: "greeting" },
-    "Hello ",
+    "H3llo ",
     createElement("i", null, name),
     ". Welcome!",
   );
