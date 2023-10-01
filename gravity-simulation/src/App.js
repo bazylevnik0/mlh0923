@@ -8,7 +8,7 @@ function App() {
   var ctx = undefined; // canvas context
   //and setting the getting of the canvas from document after loading/render
   window.addEventListener("load", (event) => {
-    console.log("window is fully loaded");
+    console.log("ready");
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
     //set mouse listeners for canvas
@@ -38,29 +38,43 @@ function App() {
       // Sort the objects based on size in descending order
       elements.sort((a, b) => b.size - a.size);
       // Iterate through the objects and calculate interactions
-      for (let i = 0; i <= elements.length - 1; i++) {
-        let cur = elements[i];
-        let next = elements[i + 1];
-        //calc direction
-        let x_delta = next.x - cur.x;
-        let y_delta = next.y - cur.y; //distance between coords
-        x_delta *= 600000000;
-        y_delta *= 200000000; //normalize in m 600millionsmeters*200
-        let r = x_delta * x_delta + y_delta * y_delta; //radius, through Pifagors theorem in meters
-        let g = 0.000022; //gravitational constant
-        let f = (g * cur.size * next.size) / (r * r); //calc force - speed of changing
-        //mass of moon 73476730900000000000000 kg
-        //distance to the moon 384000000 m
-        //f = f/600*200;//not sure, but need also normalize
-        //apply the force:
-        let x_dir = x_delta >= 0 ? 1 : -1;
-        let y_dir = y_delta >= 0 ? 1 : -1; //direction sign
-        next.x += f * x_dir;
-        next.y += f * y_dir; //need to test
+      for (let i = 0; i <= elements.length - 2; i++) {
+        let A = elements[i];
+        let B = elements[i + 1];
+        //adapted forumala of gravity force from gravity law
+        //f = k * sizeA * sizeB / distanceAB^2
+        //kg and meters
+
+        //analyze elements and find variables
+        let k = 6.6743 * Math.pow(10, -11); //gravitational constant in kg/m (6.6743 × 10-11)
+        let d; //distanceAB m
+        let x_delta = B.x - A.x;
+        let y_delta = B.y - A.y; //distance between coords in pixels
+        d = x_delta * x_delta + y_delta * y_delta; //throug Pifagors theoreme, px
+
+        //coefficients for convert pixels to ci
+        //from neptune to sun 4.488*10^12 lets take this size for canvas size and normalize
+        //600px = 4.488*10^12 => 600*x = 4.488*10^12 => x = 4.488*10^12/6; n_d = x
+        let n_d = (4.488 * Math.pow(10, 12)) / 6; //each pixel have meters
+        //mass of the sun 1.989 × 10^30 kg and it is 99.86%  of solar system mass mass
+        //lets take 400px equal to sun
+        //400px = 1.989×10^30 => 400*x = 1.989×10^30 => x = 1.989×10^30/400; n_m = x
+        let n_m = (1.989 * Math.pow(10, 30)) / 400; //each pixel have kilograms
+
+        //calc force
+        let f = ((k * (A.size * n_m) * (B.size * n_m)) / (d * n_d)) * (d * n_d);
+        let c = x_delta / y_delta; //realtion of horizontal vector and vertical vector
+        //x_delta more than y_delta - in *c
+        //f /= n_d; //convert force measure to pixels
+        //just for test:
+        f /= Math.pow(10, 47) * 10;
+        //apply force
+        x_delta >= 0 ? (B.x += f * c) : (B.x -= f * c);
+        y_delta >= 0 ? (B.y -= f) : (B.y += f);
+        console.log("force", f);
       }
     },
     redraw: function () {
-      console.log("redraw");
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, 600, 400); //clear
       //iterate trhrough the elements array
@@ -85,9 +99,9 @@ function App() {
         if (Time.play == true) {
           Time.recalculate();
           Time.redraw();
-          console.log("interval");
+          console.log(elements);
         }
-      }, 25);
+      }, 1000);
     },
     pauseAnimation: function () {
       Time.play = false;
@@ -115,7 +129,6 @@ function App() {
     });
   }
   function mouseUpCanvas(e) {
-    console.log("mouseUpCanvas", canvas);
     //delete interval
     elements.map((el) => {
       if (el.id == active) {
@@ -124,11 +137,11 @@ function App() {
     });
     //clear temp id
     active = 0;
-    console.log(elements); //!temp
+    console.log("mouseUpCanvas", elements);
   }
   //
   function onClickButton(e) {
-    console.log(e.target.innerHTML);
+    console.log("onClickButton", elements);
     //toggle state of button
     //if first launch
     if (Time.play == undefined) {
