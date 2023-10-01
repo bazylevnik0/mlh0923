@@ -4,11 +4,13 @@ import { useState } from "react";
 
 function App() {
   //create "global" var for calling the canvas object in different functions
-  var canvas = undefined;
+  var canvas = undefined; // canvas DOM element
+  var ctx = undefined; // canvas context
   //and setting the getting of the canvas from document after loading/render
   window.addEventListener("load", (event) => {
     console.log("window is fully loaded");
     canvas = document.querySelector("canvas");
+    ctx = canvas.getContext("2d");
     //set mouse listeners for canvas
     canvas.addEventListener("mousedown", mouseDownCanvas);
     canvas.addEventListener("mouseup", mouseUpCanvas);
@@ -17,7 +19,7 @@ function App() {
   const renderApp = (
     <div className="App">
       <h1>click and push to add object</h1>
-      <canvas width="300px" height="200px"></canvas>
+      <canvas width="600px" height="400px"></canvas>
       <br />
       <button onClick={onClickButton}>START</button>
     </div>
@@ -57,6 +59,23 @@ function App() {
     },
     redraw: function () {
       console.log("redraw");
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, 600, 400); //clear
+      //iterate trhrough the elements array
+      elements.map((el) => {
+        //draw circle
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(
+          el.x - el.size / 2,
+          el.y - el.size / 2,
+          el.size,
+          0,
+          Math.PI * 2,
+          true,
+        ); // Outer circle
+        ctx.fill();
+      });
     },
     startAnimation: function () {
       // Start the animation loop
@@ -87,7 +106,7 @@ function App() {
       if (el.id == active) {
         el.timer = setInterval(() => {
           el.size++; //increase size
-          //!draw
+          Time.redraw();
         }, 10);
       }
     });
