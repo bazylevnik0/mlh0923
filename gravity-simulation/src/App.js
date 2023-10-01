@@ -72,12 +72,39 @@ function App() {
     },
   };
   //UI functional
-  function mouseDownCanvas() {
-    console.log("mouseDownCanvas", canvas);
+  let active; // working only with one element -id
+  //for creating element
+  function mouseDownCanvas(e) {
+    let x = e.clientX - canvas.offsetLeft;
+    let y = e.clientY - canvas.offsetTop;
+    //create element
+    let temp = new Element(x, y, 0);
+    //add id and push to array, also add timer for size
+    temp.id = Math.random();
+    active = temp.id; //working with this now
+    elements.push(temp);
+    elements.map((el) => {
+      if (el.id == active) {
+        el.timer = setInterval(() => {
+          el.size++; //increase size
+          //!draw
+        }, 10);
+      }
+    });
   }
-  function mouseUpCanvas() {
+  function mouseUpCanvas(e) {
     console.log("mouseUpCanvas", canvas);
+    //delete interval
+    elements.map((el) => {
+      if (el.id == active) {
+        clearInterval(el.timer);
+      }
+    });
+    //clear temp id
+    active = 0;
+    console.log(elements); //!temp
   }
+  //
   function onClickButton() {
     console.log("onClickButton", canvas);
   }
