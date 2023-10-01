@@ -18,7 +18,7 @@ function App() {
   //prepare render object
   const renderApp = (
     <div className="App">
-      <h1>click and push to add object</h1>
+      <h1>click and hold to add an element</h1>
       <canvas width="600px" height="400px"></canvas>
       <br />
       <button onClick={onClickButton}>START</button>
@@ -63,15 +63,22 @@ function App() {
 
         //calc force
         let f = ((k * (A.size * n_m) * (B.size * n_m)) / (d * n_d)) * (d * n_d);
-        let c = x_delta / y_delta; //realtion of horizontal vector and vertical vector
         //x_delta more than y_delta - in *c
-        //f /= n_d; //convert force measure to pixels
-        //just for test:
-        f /= Math.pow(10, 47) * 10;
+        //normalize force(for more intuitive vizualization)
+        f >= Math.pow(10, 50) ? (f /= Math.pow(10, 50)) : (f = f);
+        f >= Math.pow(10, 49) ? (f /= Math.pow(10, 49)) : (f = f);
+        f >= Math.pow(10, 48) ? (f /= Math.pow(10, 48)) : (f = f);
+        f >= Math.pow(10, 47) ? (f /= Math.pow(10, 47)) : (f = f);
+        f >= Math.pow(10, 46) ? (f /= Math.pow(10, 46)) : (f = f);
+        f >= Math.pow(10, 45) ? (f /= Math.pow(10, 45)) : (f = f);
+        //little bit a magic numbers but logic in many cases it is ~n*10^47 numbers
+        //just trying to reduce this 10 based endings for popular cases
+
+        let c = Math.abs(x_delta / y_delta); //realtion of horizontal vector and vertical vector
         //apply force
-        x_delta >= 0 ? (B.x += f * c) : (B.x -= f * c);
+        console.log("deltas", x_delta, y_delta, f);
+        x_delta >= 0 ? (B.x -= f * c) : (B.x += f * c);
         y_delta >= 0 ? (B.y -= f) : (B.y += f);
-        console.log("force", f);
       }
     },
     redraw: function () {
@@ -124,7 +131,7 @@ function App() {
         el.timer = setInterval(() => {
           el.size++; //increase size
           Time.redraw();
-        }, 10);
+        }, 100);
       }
     });
   }
