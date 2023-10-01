@@ -49,6 +49,8 @@ function App() {
         let r = x_delta * x_delta + y_delta * y_delta; //radius, through Pifagors theorem in meters
         let g = 0.000022; //gravitational constant
         let f = (g * cur.size * next.size) / (r * r); //calc force - speed of changing
+        //mass of moon 73476730900000000000000 kg
+        //distance to the moon 384000000 m
         //f = f/600*200;//not sure, but need also normalize
         //apply the force:
         let x_dir = x_delta >= 0 ? 1 : -1;
@@ -78,16 +80,17 @@ function App() {
       });
     },
     startAnimation: function () {
-      // Start the animation loop
-      // ...
-      // Your animation code goes here
-      // ...
+      Time.play = true;
+      Time.interval = setInterval(() => {
+        if (Time.play == true) {
+          Time.recalculate();
+          Time.redraw();
+          console.log("interval");
+        }
+      }, 25);
     },
     pauseAnimation: function () {
-      // Pause the animation
-      // ...
-      // Your pause code goes here
-      // ...
+      Time.play = false;
     },
   };
   //UI functional
@@ -124,8 +127,27 @@ function App() {
     console.log(elements); //!temp
   }
   //
-  function onClickButton() {
-    console.log("onClickButton", canvas);
+  function onClickButton(e) {
+    console.log(e.target.innerHTML);
+    //toggle state of button
+    //if first launch
+    if (Time.play == undefined) {
+      //start animation
+      Time.startAnimation();
+      e.target.innerHTML = "PAUSE"; //toggle text
+      //if had started before
+    } else if (Time.play == false) {
+      //toggle time calc switch
+      Time.play = true;
+      e.target.innerHTML = "PAUSE";
+      //if now playing
+    } else {
+      //toggle time calc switch
+      Time.play = false;
+      e.target.innerHTML = "START";
+    }
+    //if pause
+    //pause animation
   }
 
   return renderApp;
